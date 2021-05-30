@@ -1,4 +1,6 @@
-# ALPR in Unscontrained Scenarios
+[![Build Status](https://travis-ci.com/xeonqq/alpr-unconstrained.svg?branch=master)](https://travis-ci.com/xeonqq/alpr-unconstrained)
+
+# ALPR in Unscontrained Scenarios (Ported to Python3 and with Docker support)
 
 ## Introduction
 
