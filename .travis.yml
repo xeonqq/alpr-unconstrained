@@ -1,0 +1,9 @@
+language: python
+services:
+    - docker
+# command to install dependencies
+before_install:
+  - docker build -t alpr:latest .
+# command to run tests
+script:
+  - docker run -v "$(pwd)":/workspace alpr:latest /bin/bash -c "cd workspace; ./test.sh"
