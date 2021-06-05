@@ -18,6 +18,21 @@ def draw_losangle(I,pts,color=(1.,1.,1.),thickness=1):
 		pt2 = tuple(pts[:,(i+1)%4].astype(int).tolist())
 		cv2.line(I,pt1,pt2,color,thickness)
 
+def blur_license_plate(I, pts, kernel_size=(43,43)):
+	blurred_image = cv2.GaussianBlur(I, kernel_size, 30)
+	roi_corners = []#np.array([[(180, 300), (120, 540), (110, 480), (160, 350)]], dtype=np.int32)
+
+	for i in range(4):
+		pt = tuple(pts[:,i].astype(int).tolist())
+		roi_corners.append(pt)
+	roi_corners = np.asarray([roi_corners], dtype=np.int32)
+	mask = np.zeros(I.shape, dtype=np.uint8)
+	channel_count = I.shape[2]
+	ignore_mask_color = (255,) * channel_count
+	cv2.fillPoly(mask, roi_corners, ignore_mask_color)
+	mask_inverse = np.ones(mask.shape).astype(np.uint8) * 255 - mask
+	return cv2.bitwise_and(blurred_image, mask) + cv2.bitwise_and(I, mask_inverse)
+
 
 def write2img(Img,label,strg,txt_color=(0,0,0),bg_color=(255,255,255),font_size=1):
 	wh_img = np.array(Img.shape[1::-1])
