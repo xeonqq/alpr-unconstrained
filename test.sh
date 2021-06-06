@@ -23,4 +23,18 @@ else
 	exit 1
 fi
 
+output_model=my-trained-model
+mkdir models
+python create-model.py eccv models/eccv-model-scracth
+python train-detector.py --model models/eccv-model-scracth --name "$output_model" --train-dir samples/train-detector --output-dir models/my-trained-model/ -lr .001 -its 2 -bs 2
+
+output_model_name=models/my-trained-model/"${output_model}"_final.h5
+echo "$output_model_name"
+if [[ -f "$output_model_name" && -s "$output_model_name" ]]; then
+    echo "can train"
+    ret=0
+else
+    echo "can not train";
+    exit 1
+fi
 exit $ret

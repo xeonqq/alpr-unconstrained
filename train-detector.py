@@ -28,7 +28,8 @@ def load_network(modelpath,input_dim):
 	inputs  = keras.layers.Input(shape=(input_dim,input_dim,3))
 	outputs = model(inputs)
 
-	output_shape = tuple([s.value for s in outputs.shape[1:]])
+	print(outputs.shape[1:])
+	output_shape = tuple([s for s in outputs.shape[1:]])
 	output_dim   = output_shape[1]
 	model_stride = input_dim / output_dim
 
@@ -73,7 +74,7 @@ if __name__ == '__main__':
 
 	model,model_stride,xshape,yshape = load_network(args.model,dim)
 
-	opt = getattr(keras.optimizers,args.optimizer)(lr=args.learning_rate)
+	opt = keras.optimizer_v2.adam.Adam(learning_rate=args.learning_rate)
 	model.compile(loss=loss, optimizer=opt)
 
 	print('Checking input directory...')
@@ -99,7 +100,7 @@ if __name__ == '__main__':
 	dg.start()
 
 	Xtrain = np.empty((batch_size,dim,dim,3),dtype='single')
-	Ytrain = np.empty((batch_size,dim/model_stride,dim/model_stride,2*4+1))
+	Ytrain = np.empty((batch_size,int(dim/model_stride),int(dim/model_stride),2*4+1))
 
 	model_path_backup = '%s/%s_backup' % (outdir,netname)
 	model_path_final  = '%s/%s_final'  % (outdir,netname)
